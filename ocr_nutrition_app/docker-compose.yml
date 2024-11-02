@@ -11,13 +11,14 @@ services:
       - db
 
   db:
-    image: redis/redis-stack-server:7.2.0-v6
-    ports:
-      - 6379:6379
-    healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+    image: postgres:13
+    container_name: ocr_nutrition_db
+    environment:
+      POSTGRES_DB: ocr_nutrition_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
-      - redis_data:/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  redis_data:
+  postgres_data:
