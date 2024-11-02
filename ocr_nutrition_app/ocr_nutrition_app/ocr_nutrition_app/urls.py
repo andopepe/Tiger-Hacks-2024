@@ -20,6 +20,5 @@ from NutritionApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path("", include("NutritionApp.urls")),
-    path("", views.index),
+    path("", include("NutritionApp.urls")),  # Include the NutritionApp URLs
 ]

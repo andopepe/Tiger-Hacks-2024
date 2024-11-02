@@ -6,6 +6,11 @@ from django.template import loader
 from django.views.decorators.cache import cache_page
 # Create your views here.
 
+from PIL import Image
+import io
+import base64
+# from pyzbar.pyzbar import decode
+
 def index(request):
     return render(request, "NutritionApp/index.html")
 
@@ -22,14 +27,21 @@ def index(request):
 
 def Upload(request):
     if request.method == 'POST':
-        form = UploadImageForm(request.POST,request.FILES)
+        form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            img_object = form.instance
-            return render(request, 'NutritionApp/imageupload.html', {'form': form, 'img_obj': img_object})
+            image_file = request.FILES['image']
+            image = Image.open(image_file)
+            # Perform any image processing with Pillow here if needed
+
+            # Convert the image to base64 for rendering in HTML
+            buffered = io.BytesIO()
+            image.save(buffered, format="PNG")
+
+            # pyzbar
+
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+
+            return render(request, 'NutritionApp/imageupload.html', {'form': form, 'img_str': img_str})
     else:
         form = UploadImageForm()
-    context = {
-            'form':form,
-        }
-    return render(request, 'NutritionApp/imageupload.html', context)
+    return render(request, 'NutritionApp/imageupload.html', {'form': form})

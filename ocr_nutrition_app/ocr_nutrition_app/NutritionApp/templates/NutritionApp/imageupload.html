@@ -1,23 +1,68 @@
+<!-- upload.html -->
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Files</title>
+    <title>Image Upload</title>
+    <style>
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            margin: 0 auto;
+        }
+        #drop-area.hover {
+            border-color: #000;
+        }
+    </style>
 </head>
-
 <body>
-    <form method='post' enctype="multipart/form-data">
+    <h1>Upload an Image</h1>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Submit">
+        <div id="drop-area">
+            <p>Drag and drop your image here</p>
+            <input type="file" id="fileElem" name="image" accept="image/*" style="display:none;" onchange="handleFiles(this.files)">
+            <label for="fileElem">or click to select a file</label>
+        </div>
+        <button type="submit">Upload</button>
     </form>
-    {% if img_obj %}  
-        <h3>Succesfully uploaded :</h3>  
-        <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:500px">  
-    {% endif %}  
-</body>
 
+    {% if img_str %}
+        <h2>Uploaded Image:</h2>
+        <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image"/>
+    {% endif %}
+
+    <script>
+        let dropArea = document.getElementById('drop-area');
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('hover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('hover');
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('hover');
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            const file = files[0];
+            const fileElem = document.getElementById('fileElem');
+            if (file) {
+                fileElem.files = files;
+            }
+        }
+    </script>
+</body>
 </html>
