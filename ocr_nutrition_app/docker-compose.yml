@@ -10,7 +10,23 @@ services:
     depends_on:
       - db
 
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    environment:
+      - GF_LOG_MODE=console file
+      - GF_LOG_LEVEL=debug
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - grafana:/var/log/grafana
+      - grafana:/var/lib/grafana
+
   db:
+    expose:
+      - "5432"
     image: postgres:13
     container_name: ocr_nutrition_db
     environment:
@@ -22,3 +38,4 @@ services:
 
 volumes:
   postgres_data:
+  grafana:
