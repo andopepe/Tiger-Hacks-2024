@@ -1,4 +1,3 @@
-
 *{
     padding: 0;
     margin: 0;
@@ -9,6 +8,7 @@ body{
     overflow-x: hidden;
     font-family:'Lato', sans-serif;
     background-color: #222629;
+    color: white;
 }
 
 p {
@@ -41,28 +41,22 @@ p {
     width: 50%;
 }
 
-.container .columns.img {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+.container .columns.buttons {
+    transform: translate(20%, 20%);
+    
 }
 
 .container .columns.content .contentContainer {
     padding: 40px 50px;
 }
 
-.container .columns.content .contentContainer h4{
-    font-weight: 700;
-    font-size: 25px;
-    margin-bottom: 20px;
-}
 
 .container .columns.content .contentContainer p {
     font-weight: 400;
     font-size: 16px;
     margin-bottom: 20px;
     margin-bottom: 15px;
-    text-align: justify;
+    text-align: center;
 }
 
 .button {
@@ -103,16 +97,16 @@ p {
         flex-flow: row wrap;
     }
 
-    .container .columns.img {
+    .container .columns.buttons {
         display: block;
-        order: 2;
+        order: 1;
         width: 100%;
         height: 50vh;
     }
 
     .container .columns.content {
         display: block;
-        order: 1;
+        order: 2;
         width: 100%;
     }
 
@@ -120,9 +114,6 @@ p {
         padding:20px 35px;
     }
 
-    .container .columns.content .contentContainer h5 {
-        margin-bottom: 5px;
-    }
     .button {
         background-color: #86C232;
         color: white;
