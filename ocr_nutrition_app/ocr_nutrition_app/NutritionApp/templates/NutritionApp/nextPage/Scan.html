@@ -21,13 +21,20 @@
         </div>
 
         <div class = "columns buttons">
-            <form method = "post">
-
-                <label for="img">Choose a picture to upload:</label>
-                <input type="file" id="img" name="imgInput" accept="image/png, image/jpeg" />
-                <input type="submit" value="Submit" class = "submitButton"/>
-                
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div id="drop-area">
+                    <p>Drag and drop your image here</p>
+                    <input type="file" id="fileElem" name="image" accept="image/*" style="display:none;" onchange="handleFiles(this.files)">
+                    <label for="fileElem">or click to select a file</label>
+                </div>
+                <button type="submit">Upload</button>
             </form>
+
+            {% if img_str %}
+                <h2>Uploaded Image:</h2>
+                <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image"/>
+            {% endif %}
 
         </div>
 

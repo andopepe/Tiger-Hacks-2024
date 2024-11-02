@@ -104,6 +104,18 @@ p {
     border-radius: 8px;
   }
 
+  #drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    margin: 0 auto;
+}
+#drop-area.hover {
+    border-color: #000;
+}
+
 @media screen and (max-width: 767px) {
     .container {
         flex-flow: row wrap;
