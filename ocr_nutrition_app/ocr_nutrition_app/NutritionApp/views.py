@@ -45,3 +45,4 @@ def Upload(request):
     else:
         form = UploadImageForm()
     return render(request, 'NutritionApp/imageupload.html', {'form': form})
+    

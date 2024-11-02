@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="Nut_Logo.png" />
     {% load static %} 
-    <link rel="stylesheet" href="{% static 'style Scan.css' %}" />
+    <link rel="stylesheet" href="{% static 'styleScan.css' %}" />
     <title>Content</title>
 </head>
 <body>
@@ -48,5 +48,33 @@
             </a>
         </div>
     </div>
+
+    <script>
+        let dropArea = document.getElementById('drop-area');
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('hover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('hover');
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('hover');
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            const file = files[0];
+            const fileElem = document.getElementById('fileElem');
+            if (file) {
+                fileElem.files = files;
+            }
+        }
+    </script>
 </body>
 </html>

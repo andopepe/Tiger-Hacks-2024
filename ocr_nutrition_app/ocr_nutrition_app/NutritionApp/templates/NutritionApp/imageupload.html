@@ -5,37 +5,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload</title>
-    <style>
-        #drop-area {
-            border: 2px dashed #ccc;
-            border-radius: 20px;
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-            margin: 0 auto;
-        }
-        #drop-area.hover {
-            border-color: #000;
-        }
-    </style>
+    {% load static %} 
+    <link rel="stylesheet" href="{% static 'styleScan.css' %}" />
+    <title>Nutrition_App_Upload</title>
 </head>
 <body>
-    <h1>Upload an Image</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div id="drop-area">
-            <p>Drag and drop your image here</p>
-            <input type="file" id="fileElem" name="image" accept="image/*" style="display:none;" onchange="handleFiles(this.files)">
-            <label for="fileElem">or click to select a file</label>
-        </div>
-        <button type="submit">Upload</button>
-    </form>
+    <div class="navbar">
+        <h1>Data Display</h1>
+    </div>
 
-    {% if img_str %}
-        <h2>Uploaded Image:</h2>
-        <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image"/>
-    {% endif %}
+    <div class = "container">
+
+        <div class = "columns content">
+            <div class = "contentContainer">
+                <p>This is where your data will show!</p>
+            </div>
+        </div>
+
+        <div class = "columns buttons">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div id="drop-area">
+                    <p>Drag and drop your image here</p>
+                    <input type="file" id="fileElem" name="image" accept="image/*" style="display:none;" onchange="handleFiles(this.files)">
+                    <label for="fileElem">or click to select a file</label>
+                </div>
+                <button type="submit">Upload</button>
+            </form>
+
+            {% if img_str %}
+                <h2>Uploaded Image:</h2>
+                <p><img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image" style="padding-right: 10px;"/></p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="buttonContainer">
+        <div class="centerButton">
+            <a href="../">
+                <button class = "button">Back</button>
+            </a>
+        </div>
+    </div>
 
     <script>
         let dropArea = document.getElementById('drop-area');

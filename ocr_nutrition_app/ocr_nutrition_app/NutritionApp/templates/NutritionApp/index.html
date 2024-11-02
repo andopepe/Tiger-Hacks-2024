@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutrition_App_Home</title>
     {% load static %} 
-    <link rel="stylesheet" href="{% static 'styleHome.css' %}" />
+    <link rel="stylesheet" href="{% static 'styleHome.css' %}" type = "text/css"/>
 </head>
 <body>
     <div class="navbar">
-        <h1>Nut Club</h1>
+        <h1>Nutrition Scan</h1>
     </div>
     
     <div class = "container">
@@ -26,6 +26,8 @@
 
             </div>
         </div>
+        
+        <!-- if you cant add the image in the css file here is where it goes, add style = "image.png" to <div> -->
         <div class = "columns img">
             &nbsp;
         </div>
@@ -33,7 +35,7 @@
 
     <div class="buttonContainer">
         <div class="centerButton">
-            <a href="Scan.html">
+            <a href="/upload/">
                 <button class = "button">Click to get started</button>
             </a>
         </div>

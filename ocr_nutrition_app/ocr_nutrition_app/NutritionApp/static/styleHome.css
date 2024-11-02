@@ -41,11 +41,10 @@ p {
     width: 50%;
 }
 
-.columns.img {
-    background-image: url ('../templates/NutritionApp/Test.png')
-}
-
+/* Here is Picture Ando!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 .container .columns.img {
+    background-image: url ('../static/Test.png');
+    /* dont delete or change anything under this*/
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
