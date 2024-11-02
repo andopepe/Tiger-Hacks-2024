@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel = "stylesheet" href = "style Scan.css" />
-    <link rel="icon" type="image/x-icon" href="../img/Nut_Logo.png">
+    <link rel="icon" type="image/x-icon" href="Nut_Logo.png" />
+    {% load static %} 
+    <link rel="stylesheet" href="{% static 'style Scan.css' %}" />
     <title>Content</title>
 </head>
 <body>
@@ -42,7 +43,7 @@
 
     <div class="buttonContainer">
         <div class="centerButton">
-            <a href="../index.html">
+            <a href="index.html">
                 <button class = "button">Back</button>
             </a>
         </div>

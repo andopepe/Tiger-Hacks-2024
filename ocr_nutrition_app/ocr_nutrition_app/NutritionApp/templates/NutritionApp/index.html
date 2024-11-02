@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutrition_App_Home</title>
-    <link rel = "stylesheet" href = "style.css" />
-    <link rel="icon" type="image/x-icon" href="img/Nut_Logo.png">
+    <link rel="icon" type="image/x-icon" href="{% static 'Nut_Logo.png' %}" />
+    {% load static %} 
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
 </head>
 <body>
     <div class="navbar">
@@ -26,14 +27,14 @@
 
             </div>
         </div>
-        <div class = "columns img" style = "background-image: url('img/Test.png')">
+        <div class = "columns img">
             &nbsp;
         </div>
     </div>
 
     <div class="buttonContainer">
         <div class="centerButton">
-            <a href="nextPage/Scan.html">
+            <a href="{% static 'Scan.html' %}">
                 <button class = "button">Click to get started</button>
             </a>
         </div>
