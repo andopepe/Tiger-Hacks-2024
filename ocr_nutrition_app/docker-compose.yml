@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: ocr_nutrition_web
+    command: python ocr_nutrition_app/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/ocr_nutrition_app  # Adjusted to mount the outer 'ocr_nutrition_app' directory
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    container_name: ocr_nutrition_db
+    environment:
+      POSTGRES_DB: ocr_nutrition_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
