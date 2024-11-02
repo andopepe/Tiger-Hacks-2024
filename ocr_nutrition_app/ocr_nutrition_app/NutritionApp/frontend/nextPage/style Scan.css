@@ -92,6 +92,18 @@ p {
     transform: translate(-50%, -50%);
   }
 
+  .submitButton {
+    color: white;
+    background-color: #86C232;
+    display: block;
+    order: 2;
+    padding: 15px 100px;
+    margin-top: 50px;
+    margin-left: 100px;
+    border: solid transparent;
+    border-radius: 8px;
+  }
+
 @media screen and (max-width: 767px) {
     .container {
         flex-flow: row wrap;

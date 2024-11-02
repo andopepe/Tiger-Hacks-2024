@@ -21,10 +21,14 @@
         </div>
 
         <div class = "columns buttons">
-            <div>
-                <button class = "button">Upload</button>
-                <button class = "button">Analyze</button>
-            </div>
+            <form method = "post">
+
+                <label for="img">Choose a picture to upload:</label>
+                <input type="file" id="img" name="imgInput" accept="image/png, image/jpeg" />
+                <input type="submit" value="Submit" class = "submitButton"/>
+                
+            </form>
+
         </div>
 
     </div>
