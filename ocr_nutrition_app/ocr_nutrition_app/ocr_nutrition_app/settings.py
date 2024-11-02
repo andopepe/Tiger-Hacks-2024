@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q3@*thvp7mxdn4+b)=0^3z#d^xu_6y%_gv0ew@f+e)q+oqz^kv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['nutscan.club', 'www.nutscan.club']
 
 INTERNAL_IPS = {
     '127.0.0.1'
