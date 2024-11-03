@@ -16,9 +16,11 @@ services:
     container_name: grafana
     environment:
       - GF_LOG_MODE=console file
-      - GF_LOG_LEVEL=debug
+      - GF_LOG_LEVEL=info
       - ALLOWED_EMBEDDING=true
       - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+
     ports:
       - "3000:3000"
     depends_on:

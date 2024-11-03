@@ -46,6 +46,40 @@
       </form>
 
       {% if img_str %}
+            <div class="form-group">
+
+                <label for="manualUpc">Manual UPC Entry:</label>
+                <div class="manual-upc-container">
+                    <input type="text" id="manualUpc" name="manual_upc" pattern="[0-9]*" minlength="12" maxlength="13"
+                        placeholder="Enter 12-13 digit UPC code" class="manual-upc-input">
+                        
+                    <button type="submit" name="submit_type" value="manual" class="submit-btn manual-submit">
+                        Submit UPC
+                    </button>
+                </div>
+
+                <p class="input-help">Or upload an image below</p>
+            </div>
+
+            <div class="form-group">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <p>Drag and drop your image here or click to select</p>
+                    <p class="file-info">Supported formats: PNG, JPG, JPEG</p>
+                </div>
+                <input type="file" name="image" id="imageInput" accept="image/*">
+            </div>
+            <div class="preview-container" id="previewContainer">
+                <h3>Preview:</h3>
+                <img class="preview-image" id="previewImage" src="#" alt="Preview">
+            </div>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+            <button type="submit" name="submit_type" value="image" class="submit-btn" id="submitBtn" disabled>
+                Upload & Scan
+            </button>
+        </form>
+
+        {% if img_str %}
         <div class="result-container">
           <h2>Uploaded Image:</h2>
           <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image" class="uploaded-image" />
