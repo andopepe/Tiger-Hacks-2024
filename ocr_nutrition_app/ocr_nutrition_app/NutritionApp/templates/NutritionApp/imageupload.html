@@ -1,83 +1,188 @@
-<!-- upload.html -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %} 
+    {% load static %}
     <link rel="stylesheet" href="{% static 'styleScan.css' %}" />
-    <title>Nutrition_App_Upload</title>
+    <title>UPC Scanner Upload</title>
 </head>
+
 <body>
-    <div class="navbar">
-        <h1>Data Display</h1>
-    </div>
+    <div class="container">
+        <h1>UPC Scanner Upload</h1>
 
-    <div class = "container">
-
-        <div class = "columns content">
-            <div class = "contentContainer">
-                <p>This is where your data will show!</p>
-            </div>
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
         </div>
+        {% endif %}
 
-        <div class = "columns buttons">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div id="drop-area">
-                    <p>Drag and drop your image here</p>
-                    <input type="file" id="fileElem" name="image" accept="image/*" style="display:none;" onchange="handleFiles(this.files)">
-                    <label for="fileElem">or click to select a file</label>
+        <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="manualUpc">Manual UPC Entry:</label>
+                <div class="manual-upc-container">
+                    <input type="text" id="manualUpc" name="manual_upc" pattern="[0-9]*" minlength="12" maxlength="13"
+                        placeholder="Enter 12-13 digit UPC code" class="manual-upc-input">
+                    <button type="submit" name="submit_type" value="manual" class="submit-btn manual-submit">
+                        Submit UPC
+                    </button>
                 </div>
-                <button type="submit">Upload</button>
-            </form>
+                <p class="input-help">Or upload an image below</p>
+            </div>
 
-            {% if img_str %}
-                <h2>Uploaded Image:</h2>
-                <p><img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image" style="padding-right: 10px;"/></p>
+            <div class="form-group">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <p>Drag and drop your image here or click to select</p>
+                    <p class="file-info">Supported formats: PNG, JPG, JPEG</p>
+                </div>
+                <input type="file" name="image" id="imageInput" accept="image/*">
+            </div>
+            <div class="preview-container" id="previewContainer">
+                <h3>Preview:</h3>
+                <img class="preview-image" id="previewImage" src="#" alt="Preview">
+            </div>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+            <button type="submit" name="submit_type" value="image" class="submit-btn" id="submitBtn" disabled>
+                Upload & Scan
+            </button>
+        </form>
+
+        {% if img_str %}
+        <div class="result-container">
+            <h2>Uploaded Image:</h2>
+            <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image" class="uploaded-image">
+
+            {% if upc_code %}
+            <div class="upc-result">
+                <h3>Detected UPC Code:</h3>
+                <p class="upc-code">{{ upc_code }}</p>
+            </div>
             {% endif %}
 
+            {% if decoded_objects %}
+            <div class="decoded-info">
+                <h3>Decoded Information:</h3>
+                <ul>
+                    {% for obj in decoded_objects %}
+                    <li>{{ obj.type }}: {{ obj.data }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
-
-    </div>
-
-    <div class="buttonContainer">
-        <div class="centerButton">
-            <a href="../">
-                <button class = "button">Back</button>
-                {% comment %} temporary, please polish {% endcomment %}
-                <iframe src="http://localhost:3000/d-solo/be2rm9ib62g3kf/new-dashboard?from=1730560666684&to=1730582266684&timezone=browser&orgId=1&panelId=1&__feature.dashboardSceneSolo" width="1000" height="1000" frameborder="0"></iframe>
-            </a>
-        </div>
+        {% endif %}
     </div>
 
     <script>
-        let dropArea = document.getElementById('drop-area');
+        document.addEventListener('DOMContentLoaded', function () {
+            const uploadForm = document.getElementById('uploadForm');
+            const uploadArea = document.getElementById('uploadArea');
+            const imageInput = document.getElementById('imageInput');
+            const previewContainer = document.getElementById('previewContainer');
+            const previewImage = document.getElementById('previewImage');
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const manualUpcInput = document.getElementById('manualUpc');
 
-        dropArea.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropArea.classList.add('hover');
-        });
+            // Manual UPC input validation
+            manualUpcInput.addEventListener('input', function (e) {
+                // Remove any non-numeric characters
+                this.value = this.value.replace(/[^0-9]/g, '');
 
-        dropArea.addEventListener('dragleave', () => {
-            dropArea.classList.remove('hover');
-        });
+                // Validate length
+                if (this.value.length >= 12 && this.value.length <= 13) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                }
+            });
 
-        dropArea.addEventListener('drop', (event) => {
-            event.preventDefault();
-            dropArea.classList.remove('hover');
-            const files = event.dataTransfer.files;
-            handleFiles(files);
-        });
+            // Handle drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
 
-        function handleFiles(files) {
-            const file = files[0];
-            const fileElem = document.getElementById('fileElem');
-            if (file) {
-                fileElem.files = files;
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+            uploadArea.addEventListener('click', () => imageInput.click());
+            imageInput.addEventListener('change', handleFiles);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
-        }
+
+            function highlight(e) {
+                uploadArea.classList.add('dragover');
+            }
+
+            function unhighlight(e) {
+                uploadArea.classList.remove('dragover');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles({ target: { files: files } });
+            }
+
+            function handleFiles(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (validateFile(file)) {
+                        displayPreview(file);
+                        submitBtn.disabled = false;
+                    } else {
+                        alert('Please upload an image file (PNG, JPG, or JPEG)');
+                        imageInput.value = '';
+                        submitBtn.disabled = true;
+                    }
+                }
+            }
+
+            function validateFile(file) {
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                return validTypes.includes(file.type);
+            }
+
+            function displayPreview(file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+
+            uploadForm.addEventListener('submit', function (e) {
+                if (e.submitter.value === 'image') {
+                    loadingSpinner.style.display = 'block';
+                    submitBtn.disabled = true;
+                }
+            });
+        });
+
+        // back button
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.history.back();
+        });
     </script>
 </body>
+
 </html>
