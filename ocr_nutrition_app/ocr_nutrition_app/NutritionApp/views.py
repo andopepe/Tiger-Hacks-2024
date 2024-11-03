@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import UploadImageForm
 from django.template import loader
-from django.views.decorators.cache import cache_page
 # Create your views here.
 
 from PIL import Image

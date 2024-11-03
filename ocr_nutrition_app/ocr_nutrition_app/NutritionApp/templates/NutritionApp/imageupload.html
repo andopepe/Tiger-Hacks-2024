@@ -1,188 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
     <link rel="stylesheet" href="{% static 'styleScan.css' %}" />
+    <script src="{% static 'js/upload.js' %}"></script>
     <title>UPC Scanner Upload</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <h1>UPC Scanner Upload</h1>
+      <h1>UPC Scanner Upload</h1>
 
-        {% if error %}
-        <div class="error-message">
-            {{ error }}
+      {% if error %}
+        <div class="error-message">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="manualUpc">Manual UPC Entry:</label>
+          <div class="manual-upc-container">
+            <input type="text" id="manualUpc" name="manual_upc" pattern="[0-9]*" minlength="12" maxlength="13" placeholder="Enter 12-13 digit UPC code" class="manual-upc-input" />
+            <button type="submit" name="submit_type" value="manual" class="submit-btn manual-submit">Submit UPC</button>
+          </div>
+          <p class="input-help">Or upload an image below</p>
         </div>
-        {% endif %}
 
-        <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
-            {% csrf_token %}
+        <div class="form-group">
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <p>Drag and drop your image here or click to select</p>
+            <p class="file-info">Supported formats: PNG, JPG, JPEG</p>
+          </div>
+          <input type="file" name="image" id="imageInput" accept="image/*" />
+        </div>
+        <div class="preview-container" id="previewContainer">
+          <h3>Preview:</h3>
+          <img class="preview-image" id="previewImage" src="#" alt="Preview" />
+        </div>
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <button type="submit" name="submit_type" value="image" class="submit-btn" id="submitBtn" disabled>Upload & Scan</button>
+      </form>
 
-            <div class="form-group">
-                <label for="manualUpc">Manual UPC Entry:</label>
-                <div class="manual-upc-container">
-                    <input type="text" id="manualUpc" name="manual_upc" pattern="[0-9]*" minlength="12" maxlength="13"
-                        placeholder="Enter 12-13 digit UPC code" class="manual-upc-input">
-                    <button type="submit" name="submit_type" value="manual" class="submit-btn manual-submit">
-                        Submit UPC
-                    </button>
-                </div>
-                <p class="input-help">Or upload an image below</p>
-            </div>
-
-            <div class="form-group">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📁</div>
-                    <p>Drag and drop your image here or click to select</p>
-                    <p class="file-info">Supported formats: PNG, JPG, JPEG</p>
-                </div>
-                <input type="file" name="image" id="imageInput" accept="image/*">
-            </div>
-            <div class="preview-container" id="previewContainer">
-                <h3>Preview:</h3>
-                <img class="preview-image" id="previewImage" src="#" alt="Preview">
-            </div>
-            <div class="loading-spinner" id="loadingSpinner"></div>
-            <button type="submit" name="submit_type" value="image" class="submit-btn" id="submitBtn" disabled>
-                Upload & Scan
-            </button>
-        </form>
-
-        {% if img_str %}
+      {% if img_str %}
         <div class="result-container">
-            <h2>Uploaded Image:</h2>
-            <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image" class="uploaded-image">
+          <h2>Uploaded Image:</h2>
+          <img src="data:image/png;base64,{{ img_str }}" alt="Uploaded Image" class="uploaded-image" />
 
-            {% if upc_code %}
+          {% if upc_code %}
             <div class="upc-result">
-                <h3>Detected UPC Code:</h3>
-                <p class="upc-code">{{ upc_code }}</p>
+              <h3>Detected UPC Code:</h3>
+              <p class="upc-code">{{ upc_code }}</p>
             </div>
-            {% endif %}
+          {% endif %}
 
-            {% if decoded_objects %}
+          {% if decoded_objects %}
             <div class="decoded-info">
-                <h3>Decoded Information:</h3>
-                <ul>
-                    {% for obj in decoded_objects %}
-                    <li>{{ obj.type }}: {{ obj.data }}</li>
-                    {% endfor %}
-                </ul>
+              <h3>Decoded Information:</h3>
+              <ul>
+                {% for obj in decoded_objects %}
+                  <li>{{ obj.type }}: {{ obj.data }}</li>
+                {% endfor %}
+              </ul>
             </div>
-            {% endif %}
+          {% endif %}
         </div>
-        {% endif %}
+      {% endif %}
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const uploadForm = document.getElementById('uploadForm');
-            const uploadArea = document.getElementById('uploadArea');
-            const imageInput = document.getElementById('imageInput');
-            const previewContainer = document.getElementById('previewContainer');
-            const previewImage = document.getElementById('previewImage');
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const manualUpcInput = document.getElementById('manualUpc');
-
-            // Manual UPC input validation
-            manualUpcInput.addEventListener('input', function (e) {
-                // Remove any non-numeric characters
-                this.value = this.value.replace(/[^0-9]/g, '');
-
-                // Validate length
-                if (this.value.length >= 12 && this.value.length <= 13) {
-                    this.classList.add('valid');
-                    this.classList.remove('invalid');
-                } else {
-                    this.classList.add('invalid');
-                    this.classList.remove('valid');
-                }
-            });
-
-            // Handle drag and drop
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false);
-            });
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, highlight, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, unhighlight, false);
-            });
-
-            uploadArea.addEventListener('drop', handleDrop, false);
-            uploadArea.addEventListener('click', () => imageInput.click());
-            imageInput.addEventListener('change', handleFiles);
-
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            function highlight(e) {
-                uploadArea.classList.add('dragover');
-            }
-
-            function unhighlight(e) {
-                uploadArea.classList.remove('dragover');
-            }
-
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                handleFiles({ target: { files: files } });
-            }
-
-            function handleFiles(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    const file = files[0];
-                    if (validateFile(file)) {
-                        displayPreview(file);
-                        submitBtn.disabled = false;
-                    } else {
-                        alert('Please upload an image file (PNG, JPG, or JPEG)');
-                        imageInput.value = '';
-                        submitBtn.disabled = true;
-                    }
-                }
-            }
-
-            function validateFile(file) {
-                const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-                return validTypes.includes(file.type);
-            }
-
-            function displayPreview(file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewImage.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-
-            uploadForm.addEventListener('submit', function (e) {
-                if (e.submitter.value === 'image') {
-                    loadingSpinner.style.display = 'block';
-                    submitBtn.disabled = true;
-                }
-            });
-        });
-
-        // back button
-        document.getElementById('backButton').addEventListener('click', function () {
-            window.history.back();
-        });
-    </script>
-</body>
-
+  </body>
 </html>
