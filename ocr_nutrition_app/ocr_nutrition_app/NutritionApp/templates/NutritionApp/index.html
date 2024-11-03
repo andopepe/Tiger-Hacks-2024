@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutrition_App_Home</title>
     {% load static %} 
-    <link rel="stylesheet" href="{% static 'styleHome.css' %}" type = "text/css"/>
+    <link rel="stylesheet" href="{% static 'styleH.css' %}" type = "text/css"/>
 </head>
 <body>
     <div class="navbar">
@@ -13,8 +13,23 @@
     </div>
 
     <div class="container">
-        <h1>Our Mission:</h1>\
-        <p> sdlhfgelrhglwerugbwlerjvhweorgubeworuyvbqeoriugbqeorgijbqerog2hb4rglovuyb4rgkiu</p>
+        <div class = "containerGroup">
+            <h1>Our Mission:</h1>
+            <p>
+                Our goal is to help people make better food choices by providing easy access to nutritional information. Just scan a barcode to quickly learn what's in your food and make smarter decisions for a healthier life.
+            </p>
+        </div>
+
+        <div class = "containerGroupImg">
+            <img src = "../static/Test.png" alt = "Test Image">
+        </div>
+
+        <div class = "containerGroupBtn">
+            <a href="/upload/">
+                <button class = "button">Click Here to Scan!</button>
+            </a>
+        </div>
+    
     </div>
 </body>
 </html>
