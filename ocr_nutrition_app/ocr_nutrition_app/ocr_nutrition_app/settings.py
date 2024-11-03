@@ -27,6 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'nutscan.club', 'www.nutscan.club']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://nutscan.club',
+    'https://www.nutscan.club',
+]
+
 INTERNAL_IPS = {
     '127.0.0.1'
 }
@@ -50,9 +55,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-X_FRAME_OPTIONS = "SAMEORIGIN"
+
 ROOT_URLCONF = 'ocr_nutrition_app.urls'
 
 TEMPLATES = [
@@ -78,25 +83,19 @@ WSGI_APPLICATION = 'ocr_nutrition_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #        "BACKEND": "django_redis.cache.RedisCache",
+    #        "LOCATION": "redis://127.0.0.1:6379/1",  # Replace with your Redis URL
+    #        "OPTIONS": {
+    #            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+    #        }
+    #    }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ocr_nutrition_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'ocr_nutrition_db',
-        'PORT': '5432',  # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# CACHES = {
-#        "default": {
-#            "BACKEND": "django_redis.cache.RedisCache",
-#            "LOCATION": "redis://127.0.0.1:6379/1",  # Replace with your Redis URL
-#            "OPTIONS": {
-#                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#            }
-#        }
-#    }
 
 
 # Password validation
@@ -141,6 +140,5 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 import os
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
