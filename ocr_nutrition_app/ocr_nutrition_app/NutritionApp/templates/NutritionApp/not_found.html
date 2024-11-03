@@ -1,0 +1,19 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Not Found</title>
+    <link rel="stylesheet" href="{% static 'styleScan.css' %}" />
+  </head>
+  <body>
+    <div style="text-align: center;">
+      <h1>Product Not Found</h1>
+      <p>
+        We couldn't find any product information for the UPC: <strong>{{ upc }}</strong>.
+      </p>
+      <a href="{% url 'upload' %}">Back to Home</a>
+    </div>
+  </body>
+</html>

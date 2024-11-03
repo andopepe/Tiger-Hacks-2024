@@ -3,12 +3,15 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import UploadImageForm
 from django.template import loader
-# Create your views here.
+
 
 from PIL import Image
 import io
 import base64
 from pyzbar.pyzbar import decode
+from .api.api import get_all_data
+# Create your views here.
+
 
 def index(request):
     return render(request, "NutritionApp/index.html")
@@ -83,3 +86,21 @@ def Upload(request):
     
     # GET request - show empty form
     return render(request, 'NutritionApp/imageupload.html', {'form': UploadImageForm()})
+
+def statistics_view(request, upc):
+    data = get_all_data(upc)
+    
+    if data is None:
+        return render(request, 'NutritionApp/not_found.html', {'upc': upc})  # Handle UPC not found
+    
+    product_info = data.get('products', [{}])[0]
+    product_name = product_info.get('product_name', 'Unknown Product')
+    nutrition = product_info.get('nutritional_info', {})
+    
+    context = {
+        'upc': upc,
+        'product_name': product_name,
+        'nutrition': nutrition,
+    }
+    
+    return render(request, 'NutritionApp/statistics.html', context)
