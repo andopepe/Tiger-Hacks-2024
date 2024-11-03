@@ -1,6 +1,5 @@
 Django>=4.2
 psycopg2-binary>=2.9
 Pillow>=9.2  # For image processing
-beautifulsoup4==4.12.3
-bs4==0.0.2
+requests==2.32.3
 pyzbar>=0.1.9
