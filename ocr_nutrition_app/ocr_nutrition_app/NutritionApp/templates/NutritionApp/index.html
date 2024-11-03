@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutrition_App_Home</title>
     {% load static %} 
-    <link rel="stylesheet" href="{% static 'styleH.css' %}" type = "text/css"/>
+    <link rel="stylesheet" href="{% static 'styleHome.css' %}" type = "text/css"/>
 </head>
 <body>
     <div class="navbar">
@@ -13,21 +13,37 @@
     </div>
 
     <div class="container">
-        <div class = "containerGroup">
+        <div class = "containerGroupTop">
             <h1>Our Mission:</h1>
             <p>
                 Our goal is to help people make better food choices by providing easy access to nutritional information. Just scan a barcode to quickly learn what's in your food and make smarter decisions for a healthier life.
             </p>
+            
+        </div>
+
+        <div class = "containerGroup">
+            <h1>What is a UPC Code?</h1>
+            <p>A UPC (Universal Product Code) is a barcode found on most retail products. It consists of 12 digits, which uniquely identify the item and its manufacturer.</p>
+            <h2>Where to Find the UPC Code</h2>
+            <p>The UPC is usually located near the bottom of the packaging, often on the back or sides. It is a black-and-white barcode with numbers beneath it.</p>
         </div>
 
         <div class = "containerGroupImg">
-            <img src = "../static/Test.png" alt = "Test Image">
+            <img src = "../static/Barcode.jpg" alt = "Barcode with red circle" width="500" height="600">
+        </div>
+
+        <div class = "containerGroup">
+            <p>In the example above, the UPC code is circled in red.</p>
         </div>
 
         <div class = "containerGroupBtn">
             <a href="/upload/">
                 <button class = "button">Click Here to Scan!</button>
             </a>
+        </div>
+
+        <div class = "JimR">
+            <p class = "JimR">Powered by <a href="http://jimries.com/" style = "color: lightgray;" target="_blank">JimR</a></p>
         </div>
     
     </div>
