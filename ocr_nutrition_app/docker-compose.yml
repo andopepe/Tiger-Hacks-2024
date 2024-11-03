@@ -9,6 +9,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - grafana
 
   grafana:
     image: grafana/grafana-enterprise
@@ -16,6 +17,8 @@ services:
     environment:
       - GF_LOG_MODE=console file
       - GF_LOG_LEVEL=debug
+      - ALLOWED_EMBEDDING=true
+      - GF_SECURITY_ALLOW_EMBEDDING=true
     ports:
       - "3000:3000"
     depends_on:
@@ -23,6 +26,8 @@ services:
     volumes:
       - grafana:/var/log/grafana
       - grafana:/var/lib/grafana
+    expose:
+      - "3000"
 
   db:
     expose:
