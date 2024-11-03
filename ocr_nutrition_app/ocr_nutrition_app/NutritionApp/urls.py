@@ -6,5 +6,5 @@ urlpatterns = [
     # path("cached", views.cached, name='cached'),
     # path("cacheless", views.cacheless, name='cacheless'),
     path("upload/", views.Upload, name="Upload"),
-
+    path('upc/<str:upc>/', views.statistics_view, name='statistics')
 ]
